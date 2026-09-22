@@ -62,19 +62,21 @@ class MainWindow(tb.App):
         self.render_home_page()
 
     def fetch_liked_shows(self):
-        if os.path.exists(DB_PATH):
-            with open(DB_PATH, "r", encoding="utf-8") as file:
+        file_path = os.path.join(os.path.dirname(__file__), DB_PATH)
+        if os.path.exists(file_path):
+            with open(file_path, "r", encoding="utf-8") as file:
                 data = json.load(file)
         else:
             data = []
-            with open(DB_PATH, "w", encoding="utf-8") as file:
+            with open(file_path, "w", encoding="utf-8") as file:
                 json.dump(data, file, indent=4)
 
         return data
 
     def sync_db(self):
         print(">> Syncing DB:", [(show["id"], show["name"]) for show in self.liked_shows])
-        with open(DB_PATH, "w", encoding="utf-8") as file:
+        file_path = os.path.join(os.path.dirname(__file__), DB_PATH)
+        with open(file_path, "w", encoding="utf-8") as file:
             json.dump(self.liked_shows, file, indent=4)
 
     def like_a_show(self, show_data):
@@ -238,7 +240,7 @@ class ShowCard(tb.Frame):
         self.controller.tk_images.append(tk_image)
 
     def load_default_image(self):
-        default_img = os.path.join(".", "assets", "default-image.png")
+        default_img = os.path.join(os.path.dirname(__file__), "assets", "default-image.png")
         tk_image = ImageTk.PhotoImage(Image.open(default_img))
         self.display_image(tk_image)
 
