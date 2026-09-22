@@ -93,11 +93,20 @@ class MainWindow(tb.App):
     def render_home_page(self):
         if self.home_page:
             return
+        if self.liked_shows_page:
+            self.liked_shows_page.destroy()
+            self.liked_shows_page = None
         self.home_page = HomePage(self.page_container, self)
         self.home_page.pack(fill=tk.BOTH, expand=True, padx=150)
 
     def render_liked_shows_page(self):
-        pass
+        if self.home_page:
+            self.home_page.destroy()
+            self.home_page = None
+        if self.liked_shows_page:
+            self.liked_shows_page.destroy()
+        self.liked_shows_page = LikedShowsPage(self.page_container, self)
+        self.liked_shows_page.pack(fill=tk.BOTH, expand=True, padx=150)
 
 
 class HomePage(tb.Frame):
@@ -149,7 +158,37 @@ class HomePage(tb.Frame):
 
     def fetch_and_populate_data(self):
         shows_data = self.fetch_shows()
-        self.shows_list.populate_data(shows_data)        
+        self.shows_list.populate_data([sh_data["show"] for sh_data in shows_data])        
+
+
+class LikedShowsPage(tb.Frame):
+    def __init__(self, parent, controller):
+        super().__init__(parent)
+        self.controller = controller
+
+        self.grid_columnconfigure(0, weight=1)
+
+        heading = tb.Label(self, text="Liked Shows Page", font=("Helvetica", 25, "bold"))
+        heading.grid(row=0, column=0, pady=(25, 10))
+
+        info_label = tb.Label(
+            self,
+            text="Your liked shows will appear here.",
+            font=("Helvetica", 15)
+        )
+        info_label.grid(row=1, column=0, pady=15)
+
+        separator = tb.Separator(self, orient="horizontal")
+        separator.grid(row=2, column=0, sticky="ew", pady=5)
+
+        self.shows_list = None
+
+        self.populate_data()
+
+    def populate_data(self):
+        self.shows_list = ShowsList(self, self, "Fetching data from database...")
+        self.shows_list.grid(row=3, column=0)
+        self.shows_list.populate_data(self.controller.liked_shows)
 
 
 class ShowsList(tb.Frame):
@@ -169,7 +208,7 @@ class ShowsList(tb.Frame):
     def populate_data(self, data):
         self.status.config(text=f"{len(data)} result(s) found.")
         for i, show_data in enumerate(data):
-            self.populate_a_show(i, show_data["show"])
+            self.populate_a_show(i, show_data)
 
     def populate_a_show(self, i, show_data):
         show = ShowCard(self, self, show_data)
