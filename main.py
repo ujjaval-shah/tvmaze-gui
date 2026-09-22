@@ -120,6 +120,8 @@ class HomePage(tb.Frame):
         self.search_query = tb.StringVar()
         self.search_entry = tb.Entry(self, textvariable=self.search_query,font=("Helvetica", 15))
         self.search_entry.grid(row=2, column=0, sticky="ew", padx=5, pady=15)
+        self.search_entry.bind("<Return>", lambda event: self.on_search())
+        self.search_entry.focus()
 
         self.search_btn = tb.Button(self, text="Search", command=self.on_search)
         self.search_btn.grid(row=2, column=1, sticky="ew", padx=5, pady=15)
@@ -258,6 +260,7 @@ class ShowCard(tb.Frame):
             self.liked_state = True
             window.like_a_show(self.data)
         self.like_btn.config(icon="heart-fill" if self.liked_state else "heart")
+
 
 if __name__ == "__main__":
     window = MainWindow()
