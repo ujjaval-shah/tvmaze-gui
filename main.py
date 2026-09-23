@@ -14,16 +14,16 @@ import json
 DB_PATH = "db.json"
 
 
-class MainWindow(tb.App):
+class TVMazeGUIApp(tb.App):
     WINDOW_SIZE = (1500, 980)
     WINDOW_TITLE = "TVMaze GUI"
     WINDOW_POSITION = (200, 0)
 
     def __init__(self):
         super().__init__(
-            title=MainWindow.WINDOW_TITLE,
-            size=MainWindow.WINDOW_SIZE,
-            position=MainWindow.WINDOW_POSITION
+            title=TVMazeGUIApp.WINDOW_TITLE,
+            size=TVMazeGUIApp.WINDOW_SIZE,
+            position=TVMazeGUIApp.WINDOW_POSITION
         )
         self.resizable(False, False)
 
@@ -242,7 +242,7 @@ class ShowCard(tb.Frame):
         like_label = tb.Label(self, text="Liked:", font=("Helvetica", 12, "bold"))
         like_label.grid(row=2, column=1, sticky="nw")
 
-        self.liked_state = window.is_a_liked_show(data["id"])
+        self.liked_state = app.is_a_liked_show(data["id"])
 
         self.like_btn = tb.Button(
             self,
@@ -294,13 +294,13 @@ class ShowCard(tb.Frame):
         print(">> Like button clicked:", self.data["name"])
         if self.liked_state:
             self.liked_state = False
-            window.unlike_a_show(self.data["id"])
+            app.unlike_a_show(self.data["id"])
         else:
             self.liked_state = True
-            window.like_a_show(self.data)
+            app.like_a_show(self.data)
         self.like_btn.config(icon="heart-fill" if self.liked_state else "heart")
 
 
 if __name__ == "__main__":
-    window = MainWindow()
-    window.mainloop()
+    app = TVMazeGUIApp()
+    app.mainloop()
