@@ -140,10 +140,10 @@ class HomePage(tb.Frame):
     def fetch_shows(self):
         # For quick testing
         # return test_data
-        query = self.search_query.get()
+        query = self.search_query.get().strip()
         base_url = "https://api.tvmaze.com/search/shows"
 
-        response = requests.get(f"{base_url}?q={urllib.parse.quote(query)}")
+        response = requests.get(base_url, params={"q": query})
         return response.json()
 
     def on_search(self):
@@ -217,7 +217,7 @@ class ShowsList(tb.Frame):
 
 class ShowCard(tb.Frame):
     def __init__(self, parent, controller, data):
-        super().__init__(parent)
+        super().__init__(parent, relief="ridge", borderwidth=1)
         self.controller = controller
         self.data = data
 
