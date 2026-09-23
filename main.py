@@ -154,7 +154,7 @@ class HomePage(tb.Frame):
             self.shows_list.destroy()
         self.shows_list = ShowsList(self, self, "Fetching results with the TVmaze API...")
         self.shows_list.grid(row=3, column=0, columnspan=2)
-        Thread(target=self.fetch_and_populate_data).start()
+        Thread(target=self.fetch_and_populate_data, daemon=True).start()
 
     def fetch_and_populate_data(self):
         shows_data = self.fetch_shows()
@@ -224,9 +224,9 @@ class ShowCard(tb.Frame):
         self.grid_columnconfigure(2, weight=1)
 
         if data["image"]:
-            Thread(target=lambda: self.load_image(data["image"]["medium"])).start()
+            Thread(target=lambda: self.load_image(data["image"]["medium"]), daemon=True).start()
         else:
-            Thread(target=self.load_default_image).start()
+            Thread(target=self.load_default_image, daemon=True).start()
 
         heading = tb.Label(self, text=data["name"], font=("Helvetica", 15, "bold"))
         heading.grid(row=0, column=1, columnspan=2, sticky="nw")
