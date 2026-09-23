@@ -2,7 +2,6 @@ import tkinter as tk
 import ttkbootstrap as tb
 import requests
 from threading import Thread
-import urllib.parse
 # from test_data import test_data
 from PIL import Image, ImageTk
 from io import BytesIO
